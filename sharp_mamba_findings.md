@@ -17,7 +17,7 @@ We successfully resolved the blur problem of $O(d^2)$ Linear Hopfield matrices b
 
 The step-by-step retrieval trajectories are visualized below:
 
-![Dual-Projection Hopfield Trajectories](C:/Users/karthikkrazy/.gemini/antigravity/brain/0241d110-ba49-44a7-8ea2-0adac73b6146/sharp_mamba_results.png)
+![Dual-Projection Hopfield Trajectories](./sharp_mamba_results.png)
 
 ---
 
