@@ -1,0 +1,3 @@
+- [x] Create and run `mamba_exact_hopfield.py` to evaluate the low-rank dual-projection exact retrieval in Mamba block structure.
+- [x] Save visualization to `mamba_exact_results.png`.
+- [x] Document findings in `mamba_exact_findings.md`.
