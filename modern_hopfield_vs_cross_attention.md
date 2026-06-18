@@ -13,7 +13,7 @@ Let:
 
 | Metric | Original Modern Hopfield (MHN) | Static Cross-Attention Hopfield |
 | :--- | :---: | :---: |
-| **Model Parameters** | $0$ (No weights; it computes self-similarities directly) | **$d \cdot M$** (Key-Value weights: $\mathbf{K} \in \mathbb{R}^{M \times d}$, $\mathbf{V} \in \mathbb{R}^{d \times M}$) |
+| **Total Parameter Count** | **$d \cdot N$** (Stored dynamically in KV activation cache) | **$d \cdot M$** (Stored statically in Key-Value weights $\mathbf{K}, \mathbf{V}$) |
 | **Time Complexity (per token)** | $O(N \cdot d)$ (Grows as sequence progresses) | **$O(d \cdot M)$** (Constant runtime per token) |
 | **Sequence Time Complexity** | **Quadratic $O(N^2 \cdot d)$** | **Linear $O(N \cdot d \cdot M)$** |
 | **Activation Memory Space** | $O(N \cdot d)$ (KV cache must scale with sequence $N$) | **$O(d \cdot M)$** (Static; independent of sequence length $N$) |
@@ -25,10 +25,11 @@ Let:
 
 ## 2. Key Architectural Differences
 
-### 1. Parametric vs. Non-Parametric Memory
-* **Original MHN**: Non-parametric. The associative memory bank $\mathbf{X}$ is populated dynamically by the sequence tokens themselves ($M = N$). There are no learnable weights for the memories.
-* **Static Cross-Attention**: Parametric. Stored patterns are held in fixed weight matrices ($\mathbf{K} \in \mathbb{R}^{M \times d}$ and $\mathbf{V} \in \mathbb{R}^{d \times M}$). The parameters are learnable or pre-loaded, rather than collected from sequence history.
+### 1. Parameter Storage and Scaling
+* **Original MHN**: Stored patterns are held dynamically in the KV cache, scaling with sequence length ($d \cdot N$). The parameter footprint grows continuously as the sequence length increases.
+* **Static Cross-Attention**: Stored patterns are held in fixed weight matrices ($\mathbf{K} \in \mathbb{R}^{M \times d}$ and $\mathbf{V} \in \mathbb{R}^{d \times M}$). The parameter footprint is static ($d \cdot M$) and independent of sequence length.
 
 ### 2. Computational Bottleneck
 * **Original MHN**: The softmax normalized attention operates over the sequence dimension $N$. This introduces the classic quadratic attention bottleneck $O(N^2)$, making long-sequence inference expensive.
 * **Static Cross-Attention**: The softmax normalized attention operates over the static memory count $M$. Because $M$ is fixed, processing scales strictly linearly with the sequence length $O(N)$, allowing fast inference over arbitrary sequence lengths.
+
